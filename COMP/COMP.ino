@@ -48,13 +48,13 @@ void setup() {
   tilt_servo.attach(TILT);
   grip_servo.write(40);
   pan_servo.write(90);
-  tilt_servo.write(160);
+  tilt_servo.write(70);
   
   Serial.begin(9600);
 }
 
 void loop() {
-  Serial.println(analogRead(FORCE));
+  Serial.println(analogRead(DIST));
 }
 
 void turnR90() {
@@ -358,10 +358,13 @@ void driveToBall(){
         }
       }
     }
-    if (digitalRead(LBUMP) == 0 || digitalRead(RBUMP) == 0){
-      delay(500);
+    if (analogRead(DIST) > 200){
+      analogWrite(RSPEED, 80);
+      analogWrite(LSPEED, 80);
+      while(analogRead(DIST) < 620) {}
       analogWrite(RSPEED, 0);
       analogWrite(LSPEED, 0);
+      delay(500);
       gripBall();
       break;
     }
