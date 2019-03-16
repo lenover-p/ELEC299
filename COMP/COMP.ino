@@ -1,18 +1,22 @@
 #include <Servo.h>
+#include <QSerial.h>
 Servo grip_servo, pan_servo, tilt_servo;
+QSerial myIRserial;
 
-#define LBUMP 2
-#define IRRX 3
+
+#define IRTX -1
+#define LENC 2
+#define LBUMP 3
 #define RDIR 4
 #define RSPEED 5
 #define LSPEED 6
 #define LDIR 7
 #define RBUMP 8
-#define LENC 9
-#define RENC 10
+#define TILT 9
+#define GRIP 10
 #define PAN 11
-#define TILT 12
-#define GRIP 13
+#define IRRX 12
+#define RENC 13
 #define FORCE A1
 #define DIST A2
 #define LINEM A3
@@ -26,7 +30,6 @@ int lSpeed = 100;
 void setup() {
   // put your setup code here, to run once:
   pinMode(LBUMP, INPUT);
-  pinMode(IRRX, INPUT);
   pinMode(RDIR, OUTPUT);
   pinMode(RSPEED, OUTPUT);
   pinMode(LSPEED, OUTPUT);
@@ -34,9 +37,6 @@ void setup() {
   pinMode(RBUMP, INPUT);
   pinMode(LENC, INPUT);
   pinMode(RENC, INPUT);
-  pinMode(PAN, OUTPUT);
-  pinMode(TILT, OUTPUT);
-  pinMode(GRIP, OUTPUT);
   pinMode(FORCE, INPUT);
   pinMode(DIST, INPUT);
   pinMode(LINEM, INPUT);
@@ -49,15 +49,23 @@ void setup() {
   grip_servo.write(40);
   pan_servo.write(90);
   tilt_servo.write(70);
+
+  myIRserial.attach(IRRX, IRTX);
   
   Serial.begin(9600);
 }
 
 void loop() {
-  Serial.println(analogRead(DIST));
+  DriveSkipCorner();
+  DriveSkipCorner();
+  DriveSkipCorner();
+  DriveUntilLeft();
+  DriveSkipCorner();
+  DriveSkipCorner();
+  DriveToBall();
 }
 
-void turnR90() {
+void TurnR90() {
   analogWrite(RSPEED, 0);
   analogWrite(LSPEED, 0);
   delay(500);
@@ -89,7 +97,7 @@ void turnR90() {
   }
 }
 
-void turnL90() {
+void TurnL90() {
   analogWrite(RSPEED, 0);
   analogWrite(LSPEED, 0);
   delay(500);
@@ -121,7 +129,7 @@ void turnL90() {
   }
 }
 
-void driveOnLine(){
+void DriveOnLine(){
   digitalWrite(RDIR, HIGH);
   digitalWrite(LDIR, HIGH);
   if (analogRead(LINEM) >= 800) {
@@ -155,7 +163,7 @@ void driveOnLine(){
   }
 }
 
-void driveUntilLeft(){
+void DriveUntilLeft(){
   while(1){
     digitalWrite(RDIR, HIGH);
     digitalWrite(LDIR, HIGH);
@@ -165,8 +173,8 @@ void driveUntilLeft(){
         analogWrite(RSPEED, 0);
         analogWrite(LSPEED, 0);
         delay(500);
-        driveForwHalfRot();
-        turnL90();
+        DriveForwHalfRot();
+        TurnL90();
         break;
       }
       else {
@@ -202,7 +210,7 @@ void driveUntilLeft(){
   }
 }
 
-void driveUntilRight(){
+void DriveUntilRight(){
   while(1){
     digitalWrite(RDIR, HIGH);
     digitalWrite(LDIR, HIGH);
@@ -212,8 +220,8 @@ void driveUntilRight(){
         analogWrite(RSPEED, 0);
         analogWrite(LSPEED, 0);
         delay(500);
-        driveForwHalfRot();
-        turnR90();
+        DriveForwHalfRot();
+        TurnR90();
         break;
       }
       else {
@@ -249,7 +257,7 @@ void driveUntilRight(){
   }
 }
 
-void driveForwHalfRot() {
+void DriveForwHalfRot() {
   analogWrite(RSPEED, 0);
   analogWrite(LSPEED, 0);
   delay(500);
@@ -281,14 +289,46 @@ void driveForwHalfRot() {
   }
 }
 
-void driveSkipCorner() {
+void DriveBackFullRot() {
+  analogWrite(RSPEED, 0);
+  analogWrite(LSPEED, 0);
+  delay(500);
+  digitalWrite(RDIR, LOW);
+  digitalWrite(LDIR, LOW);
+  
+  int state = 0;
+  int i = 0;
+  analogWrite(RSPEED, 100);
+  analogWrite(LSPEED, 100);
+  while(true){
+    if (digitalRead(LENC) == HIGH && state == 0) {
+      i++;
+      state = 1;
+    }
+    if (digitalRead(LENC) == LOW && state == 1) {
+      i++;
+      state = 0;
+    }
+    if (i >= 11 && i < 16){
+      analogWrite(RSPEED, 80);
+      analogWrite(LSPEED, 80);
+    }
+    if (i >= 16){
+      analogWrite(RSPEED, 0);
+      analogWrite(LSPEED, 0);
+      break;
+    }
+  }
+}
+
+void DriveSkipCorner() {
   while(1){
     digitalWrite(RDIR, HIGH);
     digitalWrite(LDIR, HIGH);
     Serial.println(analogRead(LINEM));
     if (analogRead(LINEM) >= 800) {
       if (analogRead(LINER) >= 800 || analogRead(LINEL) >= 800){
-        driveForwHalfRot();
+        DriveForwHalfRot();
         break;
       }
       else {
@@ -324,7 +364,7 @@ void driveSkipCorner() {
   }
 }
 
-void driveToBall(){
+void DriveToBall(){
   while(1){
     digitalWrite(RDIR, HIGH);
     digitalWrite(LDIR, HIGH);
@@ -365,13 +405,19 @@ void driveToBall(){
       analogWrite(RSPEED, 0);
       analogWrite(LSPEED, 0);
       delay(500);
-      gripBall();
+      if (analogRead(LINEM) < 800) {
+        DriveBackFullRot();
+        DriveToBall();
+      }
+      else{
+        GripBall();
+      }
       break;
     }
   }
 }
 
-void gripBall() {
+void GripBall() {
   int grip_angle = 40;
   while(analogRead(FORCE) < 200) {
     grip_angle += 10;
@@ -380,5 +426,41 @@ void gripBall() {
     }
     grip_servo.write(grip_angle);
     delay(200);
+  }
+}
+
+void DropBall() {
+  int grip_angle = 40;
+  grip_servo.write(grip_angle);
+  delay(200);
+}
+
+int GetStartPos() {
+  while(1) {
+    int val = myIRserial.receive(200);
+    if (val == 0){
+      Serial.print("No start bit recieved\n");
+    }
+    else if (val == -1) {
+      Serial.print("False start\n");
+    }
+    else if (val == -2) {
+      Serial.print("Framing error\n");
+    }
+    else{
+      Serial.print("Decimal Value: ");
+      Serial.println(val);
+      Serial.print("ASCII Character: ");
+      Serial.println((char)val);
+      if (val == 1){
+        return 1;
+      }
+      else if (val == 2) {
+        return 2;
+      }
+      else if (val == 3) {
+        return 3;
+      }
+    }
   }
 }
