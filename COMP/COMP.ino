@@ -71,6 +71,7 @@ void loop() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveToGoal();
+  break;
 }
 
 void TurnR90() {
@@ -102,6 +103,13 @@ void TurnR90() {
       analogWrite(LSPEED, 0);
       break;
     }
+  }
+  if (analogRead(LINEL) < 800 && analogRead(LINEM) < 800 && analogRead(LINER) < 800){
+  analogWrite(RSPEED, 80);
+  analogWrite(LSPEED, 80);
+  while(analogRead(LINEL) < 800 && analogRead(LINEM) < 800 && analogRead(LINER) < 800){}
+  analogWrite(RSPEED, 0);
+  analogWrite(LSPEED, 0);
   }
 }
 
@@ -135,6 +143,13 @@ void TurnL90() {
       break;
     }
   }
+  if (analogRead(LINEL) < 800 && analogRead(LINEM) < 800 && analogRead(LINER) < 800){
+  analogWrite(RSPEED, 80);
+  analogWrite(LSPEED, 80);
+  while(analogRead(LINEL) < 800 && analogRead(LINEM) < 800 && analogRead(LINER) < 800){}
+  analogWrite(RSPEED, 0);
+  analogWrite(LSPEED, 0);
+  }
 }
 
 void TurnL180() {
@@ -166,6 +181,13 @@ void TurnL180() {
       analogWrite(LSPEED, 0);
       break;
     }
+  }
+  if (analogRead(LINEL) < 800 && analogRead(LINEM) < 800 && analogRead(LINER) < 800){
+    analogWrite(RSPEED, 80);
+    analogWrite(LSPEED, 80);
+    while(analogRead(LINEL) < 800 && analogRead(LINEM) < 800 && analogRead(LINER) < 800){}
+    analogWrite(RSPEED, 0);
+    analogWrite(LSPEED, 0);
   }
 }
 
