@@ -48,7 +48,7 @@ void setup() {
   tilt_servo.attach(TILT);
   grip_servo.write(40);
   pan_servo.write(90);
-  tilt_servo.write(70);
+  tilt_servo.write(60);
 
   myIRserial.attach(IRRX, IRTX);
   
@@ -63,6 +63,14 @@ void loop() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveToBall();
+  TurnL180();
+  DriveSkipCorner();
+  DriveSkipCorner();
+  DriveUntilRight();
+  DriveSkipCorner();
+  DriveSkipCorner();
+  DriveSkipCorner();
+  DriveToGoal();
 }
 
 void TurnR90() {
@@ -129,12 +137,44 @@ void TurnL90() {
   }
 }
 
-void DriveOnLine(){
+void TurnL180() {
+  analogWrite(RSPEED, 0);
+  analogWrite(LSPEED, 0);
+  delay(500);
+  digitalWrite(RDIR, LOW);
+  digitalWrite(LDIR, HIGH);
+  
+  int state = 0;
+  int i = 0;
+  analogWrite(RSPEED, 100);
+  analogWrite(LSPEED, 100);
+  while(true){
+    if (digitalRead(LENC) == HIGH && state == 0) {
+      i++;
+      state = 1;
+    }
+    if (digitalRead(LENC) == LOW && state == 1) {
+      i++;
+      state = 0;
+    }
+    if (i >= 15 && i < 20){
+      analogWrite(RSPEED, 80);
+      analogWrite(LSPEED, 80);
+    }
+    if (i >= 20){
+      analogWrite(RSPEED, 0);
+      analogWrite(LSPEED, 0);
+      break;
+    }
+  }
+}
+
+void DriveOnLine(int topSpeed){
   digitalWrite(RDIR, HIGH);
   digitalWrite(LDIR, HIGH);
   if (analogRead(LINEM) >= 800) {
-    analogWrite(RSPEED, 100);
-    analogWrite(LSPEED, 100);
+    analogWrite(RSPEED, topSpeed);
+    analogWrite(LSPEED, topSpeed);
     Serial.print("going straight\n");
   }
   else if (analogRead(LINER) >= 800 && analogRead(LINEM) < 800) {
@@ -143,8 +183,8 @@ void DriveOnLine(){
       analogWrite(RSPEED, 0);
       analogWrite(LSPEED, 100);
       if (analogRead(LINEM) >= 800){
-        analogWrite(RSPEED, 100);
-        analogWrite(LSPEED, 100);
+        analogWrite(RSPEED, topSpeed);
+        analogWrite(LSPEED, topSpeed);
         break;
       }
     }  
@@ -155,8 +195,8 @@ void DriveOnLine(){
       analogWrite(RSPEED, 100);
       analogWrite(LSPEED, 0);
       if (analogRead(LINEM) >= 800){
-        analogWrite(RSPEED, 100);
-        analogWrite(LSPEED, 100);
+        analogWrite(RSPEED, topSpeed);
+        analogWrite(LSPEED, topSpeed);
         break;
       }
     }
@@ -258,9 +298,9 @@ void DriveUntilRight(){
 }
 
 void DriveForwHalfRot() {
-  analogWrite(RSPEED, 0);
-  analogWrite(LSPEED, 0);
-  delay(500);
+  //analogWrite(RSPEED, 0);
+  //analogWrite(LSPEED, 0);
+  //delay(500);
   digitalWrite(RDIR, HIGH);
   digitalWrite(LDIR, HIGH);
   
@@ -289,7 +329,7 @@ void DriveForwHalfRot() {
   }
 }
 
-void DriveBackFullRot() {
+void DriveBack() {
   analogWrite(RSPEED, 0);
   analogWrite(LSPEED, 0);
   delay(500);
@@ -309,11 +349,11 @@ void DriveBackFullRot() {
       i++;
       state = 0;
     }
-    if (i >= 11 && i < 16){
+    if (i >= 19 && i < 24){
       analogWrite(RSPEED, 80);
       analogWrite(LSPEED, 80);
     }
-    if (i >= 16){
+    if (i >= 24){
       analogWrite(RSPEED, 0);
       analogWrite(LSPEED, 0);
       break;
@@ -398,21 +438,72 @@ void DriveToBall(){
         }
       }
     }
-    if (analogRead(DIST) > 200){
-      analogWrite(RSPEED, 80);
-      analogWrite(LSPEED, 80);
-      while(analogRead(DIST) < 620) {}
-      analogWrite(RSPEED, 0);
-      analogWrite(LSPEED, 0);
-      delay(500);
-      if (analogRead(LINEM) < 800) {
-        DriveBackFullRot();
-        DriveToBall();
+    while(1){
+      DriveOnLine(80);
+      if(analogRead(DIST) > 620){
+        analogWrite(RSPEED, 0);
+        analogWrite(LSPEED, 0);
+        delay(500);
+        if (analogRead(LINEM) < 800) {
+          DriveBack();
+        }
+        else{
+          GripBall();
+          return;
+        }
       }
-      else{
-        GripBall();
+    }
+  }
+}
+
+void DriveToGoal(){
+  while(1){
+    digitalWrite(RDIR, HIGH);
+    digitalWrite(LDIR, HIGH);
+    Serial.println(analogRead(LINEM));
+    if (analogRead(LINEM) >= 800) {
+      analogWrite(RSPEED, 100);
+      analogWrite(LSPEED, 100);
+      Serial.print("going straight\n");
+    }
+    else if (analogRead(LINER) >= 800) {
+      Serial.print("turning right\n");
+      while(1) {
+        analogWrite(RSPEED, 0);
+        analogWrite(LSPEED, 100);
+        if (analogRead(LINEM) >= 800){
+          analogWrite(RSPEED, 100);
+          analogWrite(LSPEED, 100);
+          break;
+        }
+      }    
+    }
+    else if (analogRead(LINEL) >= 800) {
+      Serial.print("turning left\n");
+      while(1) {
+        analogWrite(RSPEED, 100);
+        analogWrite(LSPEED, 0);
+        if (analogRead(LINEM) >= 800){
+          analogWrite(RSPEED, 100);
+          analogWrite(LSPEED, 100);
+          break;
+        }
       }
-      break;
+    }
+    while(1){
+      DriveOnLine(100);
+      if(digitalRead(LBUMP) == LOW || digitalRead(RBUMP) == LOW){
+        while(1){
+          if(digitalRead(LBUMP) == LOW && digitalRead(RBUMP) == LOW){
+            break;
+          }
+        }
+        analogWrite(RSPEED, 0);
+        analogWrite(LSPEED, 0);
+        delay(500);
+        DropBall();
+        return;
+      }
     }
   }
 }
