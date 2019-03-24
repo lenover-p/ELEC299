@@ -597,14 +597,14 @@ int GetStartPos() {
       Serial.println(val);
       Serial.print("ASCII Character: ");
       Serial.println((char)val);
-      if (val == 1){
+      if (val == 0){
+        return 0;
+      }
+      else if (val == 1) {
         return 1;
       }
       else if (val == 2) {
         return 2;
-      }
-      else if (val == 3) {
-        return 3;
       }
     }
   }
