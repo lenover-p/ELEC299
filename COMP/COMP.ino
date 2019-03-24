@@ -698,7 +698,7 @@ void LeftStart5() {
 
 //Middle starting point
 //First iteration
-MiddleStart1() {
+void MiddleStart1() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -717,7 +717,7 @@ MiddleStart1() {
 }
 
 //Second iteration
-MiddleStart2() {
+void MiddleStart2() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -740,7 +740,7 @@ MiddleStart2() {
 }
 
 //Third iteration
-MiddleStart3() {
+void MiddleStart3() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -763,7 +763,7 @@ MiddleStart3() {
 }
 
 //Fourth iteration
-MiddleStart4() {
+void MiddleStart4() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -786,7 +786,7 @@ MiddleStart4() {
 }
 
 //Fifth iteration
-MiddleStart5() {
+void MiddleStart5() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -810,7 +810,7 @@ MiddleStart5() {
 
 //Right starting point
 //First iteration
-RightStart1() {
+void RightStart1() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -829,7 +829,7 @@ RightStart1() {
 }
 
 //Second iteration
-RightStart2() {
+void RightStart2() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -848,7 +848,7 @@ RightStart2() {
 }
 
 //Third iteration
-RightStart3() {
+void RightStart3() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveUntilRight();
@@ -865,7 +865,7 @@ RightStart3() {
 }
 
 //Fourth iteration
-RightStart4() {
+void RightStart4() {
   DriveUntilLeft();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -882,7 +882,7 @@ RightStart4() {
 }
 
 //Fifth iteration
-RightStart5() {
+void RightStart5() {
   DriveSkipCorner();
   DriveUntilRight();
   DriveSkipCorner();
