@@ -616,7 +616,7 @@ void LeftStart1() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
-  DriveUntilBall();
+  DriveToBall();
   TurnL180();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -633,12 +633,12 @@ void LeftStart2() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
-  TurnUntilLeft();
+  DriveUntilLeft();
   DriveSkipCorner();
   DriveToBall();
   TurnL180();
   DriveSkipCorner();
-  TurnUntilRight();
+  DriveUntilRight();
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -651,12 +651,12 @@ void LeftStart2() {
 void LeftStart3() {
   DriveSkipCorner();
   DriveSkipCorner();
-  TurnUntilLeft();
+  DriveUntilLeft();
   DriveSkipCorner();
   DriveToBall();
   TurnL180();
   DriveSkipCorner();
-  TurnUntilRight();
+  DriveUntilRight();
   DriveSkipCorner();
   DriveSkipCorner();
   DriveToGoal();
@@ -667,7 +667,7 @@ void LeftStart3() {
 //Fourth iteration
 void LeftStart4() {
   DriveSkipCorner();
-  TurnUntilRight();
+  DriveUntilRight();
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -676,7 +676,7 @@ void LeftStart4() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
-  TurnUntilLeft();
+  DriveUntilLeft();
   DriveSkipCorner();
   DriveToGoal();
   DriveBack();
@@ -685,12 +685,12 @@ void LeftStart4() {
 
 //Fifth iteration
 void LeftStart5() {
-  TurnUntilLeft();
+  DriveUntilLeft();
   DriveSkipCorner();
   DriveToBall();
   TurnL180();
   DriveSkipCorner();
-  TurnUntilRight();
+  DriveUntilRight();
   DriveToGoal();
   DriveBack();
   TurnL180();
@@ -704,7 +704,7 @@ void MiddleStart1() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
-  DriveUntilBall();
+  DriveToBall();
   TurnL180();
   DriveSkipCorner();
   DriveSkipCorner();
@@ -816,7 +816,7 @@ void RightStart1() {
   DriveSkipCorner();
   DriveSkipCorner();
   DriveSkipCorner();
-  DriveUntilBall();
+  DriveToBall();
   TurnL180();
   DriveSkipCorner();
   DriveSkipCorner();
