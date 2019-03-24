@@ -57,26 +57,34 @@ void setup() {
 }
 
 void loop() {
-GripBall();
-while(1){}
+  startPos = GetStartPos();
 
-//  LeftStart1();
-//  LeftStart2();
-//  LeftStart3();
-//  LeftStart4();
-//  LeftStart5();
+  if(startPos = 0) {
+    LeftStart1();
+    LeftStart2();
+    LeftStart3();
+    LeftStart4();
+    LeftStart5();
+    while(1){}
+  }
 
-//  MiddleStart1();
-//  MiddleStart2();
-//  MiddleStart3();
-//  MiddleStart4();
-//  MiddleStart5();
-//
-//  RightStart1();
-//  RightStart2();
-//  RightStart3();
-//  RightStart4();
-//  RightStart5();
+  else if(startPos = 1){
+    MiddleStart1();
+    MiddleStart2();
+    MiddleStart3();
+    MiddleStart4();
+    MiddleStart5();
+    while(1){}
+  }
+
+  else if (startPos = 2){
+    RightStart1();
+    RightStart2();
+    RightStart3();
+    RightStart4();
+    RightStart5();
+    while(1){}
+  }
 }
 
 void TurnR90() {
@@ -589,30 +597,15 @@ void DropBall() {
 
 int GetStartPos() {
   while(1) {
-    int val = myIRserial.receive(200);
-    if (val == 0){
-      Serial.print("No start bit recieved\n");
+    int charVal = (char)myIRserial.receive(200);
+    if (charVal == '0'){
+      return 0;
     }
-    else if (val == -1) {
-      Serial.print("False start\n");
+    else if (charVal == '1') {
+      return 1;
     }
-    else if (val == -2) {
-      Serial.print("Framing error\n");
-    }
-    else{
-      Serial.print("Decimal Value: ");
-      Serial.println(val);
-      Serial.print("ASCII Character: ");
-      Serial.println((char)val);
-      if (val == 0){
-        return 0;
-      }
-      else if (val == 1) {
-        return 1;
-      }
-      else if (val == 2) {
-        return 2;
-      }
+    else if (charVal == '2') {
+      return 2;
     }
   }
 }
