@@ -57,11 +57,11 @@ void setup() {
 }
 
 void loop() {
-  LeftStart1();
-  LeftStart2();
-  LeftStart3();
-  LeftStart4();
-  LeftStart5();
+//  LeftStart1();
+//  LeftStart2();
+//  LeftStart3();
+//  LeftStart4();
+//  LeftStart5();
 
 //  MiddleStart1();
 //  MiddleStart2();
@@ -563,7 +563,10 @@ void GripBall() {
   while(analogRead(FORCE) < 200) {
     grip_angle += 10;
     if (grip_angle >= 150) {
+      tilt_servo.write(110);
       grip_angle = 40;
+      delay(300);
+      tilt_servo.write(60);
     }
     grip_servo.write(grip_angle);
     delay(200);
