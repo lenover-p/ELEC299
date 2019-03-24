@@ -57,6 +57,9 @@ void setup() {
 }
 
 void loop() {
+GripBall();
+while(1){}
+
 //  LeftStart1();
 //  LeftStart2();
 //  LeftStart3();
@@ -565,7 +568,8 @@ void GripBall() {
     if (grip_angle >= 150) {
       tilt_servo.write(110);
       grip_angle = 40;
-      delay(300);
+      grip_servo.write(grip_angle);
+      delay(500);
       tilt_servo.write(60);
     }
     grip_servo.write(grip_angle);
