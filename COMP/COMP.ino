@@ -23,7 +23,7 @@ QSerial myIRserial;
 #define LINEL A4
 #define LINER A5
 
-#define lineThresh 825
+#define lineThresh 800
 
 int rSpeed = 100;
 int lSpeed = 100;
@@ -200,14 +200,14 @@ void DriveOnLine(int topSpeed){
   if (analogRead(LINEM) >= lineThresh) {
     analogWrite(RSPEED, topSpeed);
     analogWrite(LSPEED, topSpeed);
-    Serial.print("going straight\n");
+    //Serial.print("going straight\n");
   }
   else if (analogRead(LINEM) < lineThresh && analogRead(LINEL) < lineThresh && analogRead(LINER) < lineThresh){
     analogWrite(RSPEED, topSpeed);
     analogWrite(LSPEED, topSpeed);
   }
   else if (analogRead(LINER) >= lineThresh && analogRead(LINEM) < lineThresh) {
-    Serial.print("turning right\n");
+      //Serial.print("turning right\n");
     while(1) {
       analogWrite(RSPEED, 0);
       analogWrite(LSPEED, 100);
@@ -219,7 +219,7 @@ void DriveOnLine(int topSpeed){
     }  
   }
   else if (analogRead(LINEL) >= lineThresh && analogRead(LINEM) < lineThresh) {
-    Serial.print("turning left\n");
+    //Serial.print("turning left\n");
     while(1) {
       analogWrite(RSPEED, 100);
       analogWrite(LSPEED, 0);
@@ -236,7 +236,7 @@ void DriveUntilLeft(){
   while(1){
     digitalWrite(RDIR, HIGH);
     digitalWrite(LDIR, HIGH);
-    Serial.println(analogRead(LINEM));
+    //Serial.println(analogRead(LINEM));
     if (analogRead(LINEM) >= lineThresh) {
       if (analogRead(LINEL) >= lineThresh){
         analogWrite(RSPEED, 0);
@@ -249,7 +249,7 @@ void DriveUntilLeft(){
       else {
         analogWrite(RSPEED, 100);
         analogWrite(LSPEED, 100);
-        Serial.print("going straight\n");
+        //Serial.print("going straight\n");
       }
     }
     else if (analogRead(LINEM) < lineThresh && analogRead(LINEL) < lineThresh && analogRead(LINER) < lineThresh){
@@ -257,7 +257,7 @@ void DriveUntilLeft(){
       analogWrite(LSPEED, 100);
     }
     else if (analogRead(LINER) >= lineThresh) {
-      Serial.print("turning right\n");
+      //Serial.print("turning right\n");
       while(1) {
         analogWrite(RSPEED, 0);
         analogWrite(LSPEED, 100);
@@ -269,7 +269,7 @@ void DriveUntilLeft(){
       }    
     }
     else if (analogRead(LINEL) >= lineThresh) {
-      Serial.print("turning left\n");
+      //Serial.print("turning left\n");
       while(1) {
         analogWrite(RSPEED, 100);
         analogWrite(LSPEED, 0);
@@ -287,7 +287,7 @@ void DriveUntilRight(){
   while(1){
     digitalWrite(RDIR, HIGH);
     digitalWrite(LDIR, HIGH);
-    Serial.println(analogRead(LINEM));
+    //Serial.println(analogRead(LINEM));
     if (analogRead(LINEM) >= lineThresh) {
       if (analogRead(LINER) >= lineThresh){
         analogWrite(RSPEED, 0);
@@ -300,7 +300,7 @@ void DriveUntilRight(){
       else {
         analogWrite(RSPEED, 100);
         analogWrite(LSPEED, 100);
-        Serial.print("going straight\n");
+        //Serial.print("going straight\n");
       }
     }
     else if (analogRead(LINEM) < lineThresh && analogRead(LINEL) < lineThresh && analogRead(LINER) < lineThresh){
@@ -308,7 +308,7 @@ void DriveUntilRight(){
       analogWrite(LSPEED, 100);
     }
     else if (analogRead(LINER) >= lineThresh) {
-      Serial.print("turning right\n");
+      //Serial.print("turning right\n");
       while(1) {
         analogWrite(RSPEED, 0);
         analogWrite(LSPEED, 100);
@@ -320,7 +320,7 @@ void DriveUntilRight(){
       }    
     }
     else if (analogRead(LINEL) >= lineThresh) {
-      Serial.print("turning left\n");
+      //Serial.print("turning left\n");
       while(1) {
         analogWrite(RSPEED, 100);
         analogWrite(LSPEED, 0);
@@ -386,11 +386,11 @@ void DriveBack() {
       i++;
       state = 0;
     }
-    if (i >= 19 && i < 24){
+    if (i >= 9 && i < 12){
       analogWrite(RSPEED, 80);
       analogWrite(LSPEED, 80);
     }
-    if (i >= 24){
+    if (i >= 12){
       analogWrite(RSPEED, 0);
       analogWrite(LSPEED, 0);
       break;
@@ -402,7 +402,7 @@ void DriveSkipCorner() {
   while(1){
     digitalWrite(RDIR, HIGH);
     digitalWrite(LDIR, HIGH);
-    Serial.println(analogRead(LINEM));
+    //Serial.println(analogRead(LINEM));
     if (analogRead(LINEM) >= lineThresh) {
       if (analogRead(LINER) >= lineThresh || analogRead(LINEL) >= lineThresh){
         DriveForwHalfRot();
@@ -411,7 +411,7 @@ void DriveSkipCorner() {
       else {
         analogWrite(RSPEED, 100);
         analogWrite(LSPEED, 100);
-        Serial.print("going straight\n");
+        //Serial.print("going straight\n");
       }
     }
     else if (analogRead(LINEM) < lineThresh && analogRead(LINEL) < lineThresh && analogRead(LINER) < lineThresh){
@@ -419,7 +419,7 @@ void DriveSkipCorner() {
       analogWrite(LSPEED, 100);
     }
     else if (analogRead(LINER) >= lineThresh) {
-      Serial.print("turning right\n");
+      //Serial.print("turning right\n");
       while(1) {
         analogWrite(RSPEED, 0);
         analogWrite(LSPEED, 100);
@@ -431,7 +431,7 @@ void DriveSkipCorner() {
       }    
     }
     else if (analogRead(LINEL) >= lineThresh) {
-      Serial.print("turning left\n");
+      //Serial.print("turning left\n");
       while(1) {
         analogWrite(RSPEED, 100);
         analogWrite(LSPEED, 0);
@@ -449,18 +449,18 @@ void DriveToBall(){
   while(1){
     digitalWrite(RDIR, HIGH);
     digitalWrite(LDIR, HIGH);
-    Serial.println(analogRead(LINEM));
+    //Serial.println(analogRead(LINEM));
     if (analogRead(LINEM) >= lineThresh) {
       analogWrite(RSPEED, 100);
       analogWrite(LSPEED, 100);
-      Serial.print("going straight\n");
+      //Serial.print("going straight\n");
     }
     else if (analogRead(LINEM) < lineThresh && analogRead(LINEL) < lineThresh && analogRead(LINER) < lineThresh){
       analogWrite(RSPEED, 100);
       analogWrite(LSPEED, 100);
     }
     else if (analogRead(LINER) >= lineThresh) {
-      Serial.print("turning right\n");
+      //Serial.print("turning right\n");
       while(1) {
         analogWrite(RSPEED, 0);
         analogWrite(LSPEED, 100);
@@ -472,7 +472,7 @@ void DriveToBall(){
       }    
     }
     else if (analogRead(LINEL) >= lineThresh) {
-      Serial.print("turning left\n");
+      //Serial.print("turning left\n");
       while(1) {
         analogWrite(RSPEED, 100);
         analogWrite(LSPEED, 0);
@@ -485,7 +485,7 @@ void DriveToBall(){
     }
     while(1){
       DriveOnLine(80);
-      if(analogRead(DIST) > 685){
+      if(analogRead(DIST) > 660){
         analogWrite(RSPEED, 0);
         analogWrite(LSPEED, 0);
         delay(500);
@@ -505,18 +505,18 @@ void DriveToGoal(){
   while(1){
     digitalWrite(RDIR, HIGH);
     digitalWrite(LDIR, HIGH);
-    Serial.println(analogRead(LINEM));
+    //Serial.println(analogRead(LINEM));
     if (analogRead(LINEM) >= lineThresh) {
       analogWrite(RSPEED, 100);
       analogWrite(LSPEED, 100);
-      Serial.print("going straight\n");
+      //Serial.print("going straight\n");
     }
     else if (analogRead(LINEM) < lineThresh && analogRead(LINEL) < lineThresh && analogRead(LINER) < lineThresh){
       analogWrite(RSPEED, 100);
       analogWrite(LSPEED, 100);
     }
     else if (analogRead(LINER) >= lineThresh) {
-      Serial.print("turning right\n");
+      //Serial.print("turning right\n");
       while(1) {
         analogWrite(RSPEED, 0);
         analogWrite(LSPEED, 100);
@@ -528,7 +528,7 @@ void DriveToGoal(){
       }    
     }
     else if (analogRead(LINEL) >= lineThresh) {
-      Serial.print("turning left\n");
+      //Serial.print("turning left\n");
       while(1) {
         analogWrite(RSPEED, 100);
         analogWrite(LSPEED, 0);
